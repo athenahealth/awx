@@ -60,7 +60,7 @@ awx_web_hostname=awxweb
 postgres_data_dir=/tmp/pgdocker
 host_port=80
 host_port_ssl=443
-#ssl_certificate=
+# ssl_certificate_dir
 docker_compose_dir=/tmp/awxcompose
 
 # Required for Openshift when building the image on your own

@@ -1,0 +1,29 @@
+---
+- name: Create dirs for tls files
+  file:
+    path: "{{ ssl_certificate_dir }}"
+    state: directory
+    mode: 0755
+
+- name: Create private key
+  openssl_privatekey:
+    path: "{{ ssl_certificate_dir }}/{{ inventory_hostname }}.key"
+    size: 4096
+    type: RSA
+
+- name: Create a Certificate Signing Request
+  openssl_csr:
+    path: "{{ ssl_certificate_dir }}/{{ inventory_hostname }}.csr"
+    privatekey_path: "{{ ssl_certificate_dir }}/{{ inventory_hostname }}.key"
+    country_name: DE
+    organization_name: "{{ inventory_hostname }}"
+    email_address: "abus@{{ inventory_hostname }}"
+    common_name: "{{ inventory_hostname }}"
+
+- name: Generate a Self Signed OpenSSL certificate
+  openssl_certificate:
+    path: "{{ ssl_certificate_dir }}/{{ inventory_hostname }}.crt"
+    privatekey_path: "{{ ssl_certificate_dir }}/{{ inventory_hostname }}.key"
+    csr_path: "{{ ssl_certificate_dir }}/{{ inventory_hostname }}.csr"
+    provider: selfsigned
+    signature_algorithms: RSA
